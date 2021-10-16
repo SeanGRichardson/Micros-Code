@@ -1,36 +1,70 @@
 
-Players_Setup <- vector(length = 16)
+rm(list = ls())
 
-Players_Setup <- c("BRARAG", "BRARKG", "BRKRAG", "BRKRKG", 
-             "BGARAG", "BGARKG", "BGKRAG", "BGKRKG",
-             "ERARAG", "ERARKG", "ERKRAG", "ERKRKG",
-             "EGARAG", "EGARKG", "EGKRAG", "EGKRKG") %>% as.data.frame
+library(tidyverse)
+library(glue)
+
+Players_Setup <- vector(length = 32)
+
+Players_Setup <- c("1RA1A2AN", "1RA1A2KN", "1RA1K2AN", "1RA1K2KN",
+                   "1RK1A2AN", "1RK1A2KN", "1RK1K2AN", "1RK1K2KN",
+                   "1NA1A2AN", "1NA1A2KN", "1NA1K2AN", "1NA1K2KN",
+                   "1NK1A2AN", "1NK1A2KN", "1NK1K2AN", "1NK1K2KN",
+                   "2RA1A2AN", "2RA1A2KN", "2RA1K2AN", "2RA1K2KN",
+                   "2RK1A2AN", "2RK1A2KN", "2RK1K2AN", "2RK1K2KN",
+                   "2NA1A2AN", "2NA1A2KN", "2NA1K2AN", "2NA1K2KN",
+                   "2NK1A2AN", "2NK1A2KN", "2NK1K2AN", "2NK1K2KN")%>% as.data.frame
 
 colnames(Players_Setup) <- "Full_Type"
 
-Types <- c("B", "B", "B", "B",
-           "B", "B", "B", "B",
-           "E", "E", "E", "E",
-           "E", "E", "E", "E")
+Types <- c("1", "1", "1", "1",
+           "1", "1", "1", "1",
+           "1", "1", "1", "1",
+           "1", "1", "1", "1",
+           "2", "2", "2", "2",
+           "2", "2", "2", "2",
+           "2", "2", "2", "2",
+           "2", "2", "2", "2")
 
-Shirt <- c("R", "R", "R", "R",
-           "G", "G", "G", "G",
-           "R", "R", "R", "R",
-           "G", "G", "G", "G")
+Signal <- c("1", "1", "1", "1",
+            "1", "1", "1", "1",
+            "N", "N", "N", "N",
+            "N", "N", "N", "N",
+            "2", "2", "2", "2",
+            "2", "2", "2", "2",
+            "N", "N", "N", "N",
+            "N", "N", "N", "N")
 
-R_Response <- c("A", "A", "K", "K",
-                "A", "A", "K", "K",
-                "A", "A", "K", "K",
-                "A", "A", "K", "K")
+R1_Response <- c("A", "A", "A", "A",
+                 "K", "K", "K", "K",
+                 "A", "A", "A", "A",
+                 "K", "K", "K", "K",
+                 "A", "A", "A", "A",
+                 "K", "K", "K", "K",
+                 "A", "A", "A", "A",
+                 "K", "K", "K", "K")
 
-G_Response <- c("A", "K", "A", "K",
+R2_Response <- c("A", "A", "K", "K",
+                 "A", "A", "K", "K",
+                 "A", "A", "K", "K",
+                 "A", "A", "K", "K",
+                 "A", "A", "K", "K",
+                 "A", "A", "K", "K",
+                 "A", "A", "K", "K",
+                 "A", "A", "K", "K")
+
+N_Response <- c("A", "K", "A", "K",
+                "A", "K", "A", "K",
+                "A", "K", "A", "K",
+                "A", "K", "A", "K",
+                "A", "K", "A", "K",
                 "A", "K", "A", "K",
                 "A", "K", "A", "K",
                 "A", "K", "A", "K")
 
 Players_Setup <- cbind(Players_Setup, Types) %>%
-  cbind(Shirt) %>% cbind(R_Response) %>%
-  cbind(G_Response)
+  cbind(Signal) %>% cbind(R1_Response) %>%
+  cbind(R2_Response) %>% cbind(N_Response)
 
 
 
@@ -39,31 +73,23 @@ Players_Setup <- cbind(Players_Setup, Types) %>%
 
 ALPHA <- 0.5
 
-DELTA <- 0.2
+DELTA <- 0.1
 
-GAMMA <- 0.6
 
 #Specify initial distribution
 
-n0 <- c(1/16,
-        1/16,
-        1/16,
-        1/16,
-        1/16,
-        1/16,
-        1/16,
-        1/16,
-        1/16,
-        1/16,
-        1/16,
-        1/16,
-        1/16,
-        1/16,
-        1/16,
-        1/16)
+n0 <- c(1/32, 1/32, 1/32, 1/32,
+        1/32, 1/32, 1/32, 1/32,
+        1/32, 1/32, 1/32, 1/32,
+        1/32, 1/32, 1/32, 1/32,
+        1/32, 1/32, 1/32, 1/32,
+        1/32, 1/32, 1/32, 1/32,
+        1/32, 1/32, 1/32, 1/32,
+        1/32, 1/32, 1/32, 1/32)
 
 
-Max_Rounds <- 1000
+
+Max_Rounds <- 100
 
 N <- n0
 
@@ -83,9 +109,9 @@ Players <- Players %>% cbind(N)
 
 p <- 0
 
-for(i in 1:16){
+for(i in 1:32){
   
-  Type_Yes <- as.numeric(grepl("B", Players$Types[i]))
+  Type_Yes <- as.numeric(grepl("1", Players$Types[i]))
   
   Weight = Players$N[i]
   
@@ -98,9 +124,9 @@ for(i in 1:16){
 
 q <- 0
 
-for(i in 1:16){
+for(i in 1:32){
   
-  Type_Yes <- as.numeric(grepl("E", Players$Types[i]))
+  Type_Yes <- as.numeric(grepl("2", Players$Types[i]))
   
   Weight = Players$N[i]
   
@@ -114,15 +140,15 @@ for(i in 1:16){
 
 pr <- 0 
 
-for(i in 1:16){
+for(i in 1:32){
   
-  Type_Yes <- as.numeric(grepl("B", Players$Types[i]))
+  Type_Yes <- as.numeric(grepl("1", Players$Types[i]))
   
-  Shirt_Yes <- as.numeric(grepl("R", Players$Shirt[i]))
+  Signal_Yes <- as.numeric(grepl("1", Players$Signal[i]))
   
   Weight = Players$N[i]
   
-  pr <- pr + Type_Yes*Shirt_Yes*Weight
+  pr <- pr + Type_Yes*Signal_Yes*Weight
   
   
 }
@@ -130,47 +156,47 @@ for(i in 1:16){
 
 qr <- 0 
 
-for(i in 1:16){
+for(i in 1:32){
   
-  Type_Yes <- as.numeric(grepl("E", Players$Types[i]))
+  Type_Yes <- as.numeric(grepl("2", Players$Types[i]))
   
-  Shirt_Yes <- as.numeric(grepl("R", Players$Shirt[i]))
+  Signal_Yes <- as.numeric(grepl("2", Players$Signal[i]))
   
   Weight = Players$N[i]
   
-  qr <- qr + Type_Yes*Shirt_Yes*Weight
+  qr <- qr + Type_Yes*Signal_Yes*Weight
   
   
 }
 
 
-pg <- 0 
+pn <- 0 
 
-for(i in 1:16){
+for(i in 1:32){
   
-  Type_Yes <- as.numeric(grepl("B", Players$Types[i]))
+  Type_Yes <- as.numeric(grepl("1", Players$Types[i]))
   
-  Shirt_Yes <- as.numeric(grepl("G", Players$Shirt[i]))
+  Signal_Yes <- as.numeric(grepl("N", Players$Signal[i]))
   
   Weight = Players$N[i]
   
-  pg <- pg + Type_Yes*Shirt_Yes*Weight
+  pn <- pn + Type_Yes*Signal_Yes*Weight
   
   
 }
 
 
-qg <- 0 
+qn <- 0 
 
-for(i in 1:16){
+for(i in 1:32){
   
-  Type_Yes <- as.numeric(grepl("E", Players$Types[i]))
+  Type_Yes <- as.numeric(grepl("2", Players$Types[i]))
   
-  Shirt_Yes <- as.numeric(grepl("G", Players$Shirt[i]))
+  Signal_Yes <- as.numeric(grepl("N", Players$Signal[i]))
   
   Weight = Players$N[i]
   
-  qg <- qg + Type_Yes*Shirt_Yes*Weight
+  qn <- qn + Type_Yes*Signal_Yes*Weight
   
   
 }
@@ -178,139 +204,92 @@ for(i in 1:16){
 
 # Percentage each type, shirt colour and response to R
 
-prar <- 0 
+pa1 <- 0 
 
-for(i in 1:16){
+for(i in 1:32){
   
-  Type_Yes <- as.numeric(grepl("B", Players$Types[i]))
+  Type_Yes <- as.numeric(grepl("1", Players$Types[i]))
   
-  Shirt_Yes <- as.numeric(grepl("R", Players$Shirt[i]))
-  
-  R_Response_Yes <- as.numeric(grepl("A", Players$R_Response[i]))
+  R1_Response_Yes <- as.numeric(grepl("A", Players$R1_Response[i]))
   
   Weight = Players$N[i]
   
-  prar <- prar + Type_Yes*Shirt_Yes*Weight*R_Response_Yes
+  pa1 <- pa1 + Type_Yes*Weight*R1_Response_Yes
   
 }
 
 
-prag <- 0 
+pa2 <- 0 
 
-for(i in 1:16){
+for(i in 1:32){
   
-  Type_Yes <- as.numeric(grepl("B", Players$Types[i]))
+  Type_Yes <- as.numeric(grepl("1", Players$Types[i]))
   
-  Shirt_Yes <- as.numeric(grepl("R", Players$Shirt[i]))
-  
-  G_Response_Yes <- as.numeric(grepl("A", Players$G_Response[i]))
+  R2_Response_Yes <- as.numeric(grepl("A", Players$R2_Response[i]))
   
   Weight = Players$N[i]
   
-  prag <- prag + Type_Yes*Shirt_Yes*Weight*G_Response_Yes
+  pa2 <- pa2 + Type_Yes*Weight*R2_Response_Yes
   
 }
 
 
-pgar <- 0 
+pan <- 0 
 
-for(i in 1:16){
+for(i in 1:32){
   
-  Type_Yes <- as.numeric(grepl("B", Players$Types[i]))
+  Type_Yes <- as.numeric(grepl("1", Players$Types[i]))
   
-  Shirt_Yes <- as.numeric(grepl("G", Players$Shirt[i]))
-  
-  R_Response_Yes <- as.numeric(grepl("A", Players$R_Response[i]))
+  N_Response_Yes <- as.numeric(grepl("A", Players$N_Response[i]))
   
   Weight = Players$N[i]
   
-  pgar <- pgar + Type_Yes*Shirt_Yes*Weight*R_Response_Yes
+  pan <- pan + Type_Yes*Weight*N_Response_Yes
   
 }
 
 
+qa1 <- 0 
 
-pgag <- 0 
-
-for(i in 1:16){
+for(i in 1:32){
   
-  Type_Yes <- as.numeric(grepl("B", Players$Types[i]))
+  Type_Yes <- as.numeric(grepl("2", Players$Types[i]))
   
-  Shirt_Yes <- as.numeric(grepl("G", Players$Shirt[i]))
-  
-  G_Response_Yes <- as.numeric(grepl("A", Players$G_Response[i]))
+  R1_Response_Yes <- as.numeric(grepl("A", Players$R1_Response[i]))
   
   Weight = Players$N[i]
   
-  pgag <- pgag + Type_Yes*Shirt_Yes*Weight*G_Response_Yes
-  
-}
-
-qrar <- 0 
-
-for(i in 1:16){
-  
-  Type_Yes <- as.numeric(grepl("E", Players$Types[i]))
-  
-  Shirt_Yes <- as.numeric(grepl("R", Players$Shirt[i]))
-  
-  R_Response_Yes <- as.numeric(grepl("A", Players$R_Response[i]))
-  
-  Weight = Players$N[i]
-  
-  qrar <- qrar + Type_Yes*Shirt_Yes*Weight*R_Response_Yes
+  qa1 <- qa1 + Type_Yes*Weight*R1_Response_Yes
   
 }
 
 
-qrag <- 0 
+qa2 <- 0 
 
-for(i in 1:16){
+for(i in 1:32){
   
-  Type_Yes <- as.numeric(grepl("E", Players$Types[i]))
+  Type_Yes <- as.numeric(grepl("2", Players$Types[i]))
   
-  Shirt_Yes <- as.numeric(grepl("R", Players$Shirt[i]))
-  
-  G_Response_Yes <- as.numeric(grepl("A", Players$G_Response[i]))
+  R2_Response_Yes <- as.numeric(grepl("A", Players$R2_Response[i]))
   
   Weight = Players$N[i]
   
-  qrag <- qrag + Type_Yes*Shirt_Yes*Weight*G_Response_Yes
+  qa2 <- qa2 + Type_Yes*Weight*R2_Response_Yes
   
 }
 
 
-qgar <- 0 
+qan <- 0 
 
-for(i in 1:16){
+for(i in 1:32){
   
-  Type_Yes <- as.numeric(grepl("E", Players$Types[i]))
+  Type_Yes <- as.numeric(grepl("2", Players$Types[i]))
   
-  Shirt_Yes <- as.numeric(grepl("G", Players$Shirt[i]))
-  
-  R_Response_Yes <- as.numeric(grepl("A", Players$R_Response[i]))
+  N_Response_Yes <- as.numeric(grepl("A", Players$N_Response[i]))
   
   Weight = Players$N[i]
   
-  qgar <- qgar + Type_Yes*Shirt_Yes*Weight*R_Response_Yes
-  
-}
-
-
-
-qgag <- 0 
-
-for(i in 1:16){
-  
-  Type_Yes <- as.numeric(grepl("E", Players$Types[i]))
-  
-  Shirt_Yes <- as.numeric(grepl("G", Players$Shirt[i]))
-  
-  G_Response_Yes <- as.numeric(grepl("A", Players$G_Response[i]))
-  
-  Weight = Players$N[i]
-  
-  qgag <- qgag + Type_Yes*Shirt_Yes*Weight*G_Response_Yes
+  qan <- qan + Type_Yes*Weight*N_Response_Yes
   
 }
 
@@ -321,79 +300,146 @@ for(i in 1:16){
 
 
 
-u_BRARAG <- 0.5 *(GAMMA * pr + GAMMA * pg - ALPHA * qr - ALPHA * qg) +
-  0.5 * (GAMMA * prar - ALPHA * pgar - qrar - ALPHA * qgar)
+
+u_1RA1A2AN <- 0.5 *(1 - ALPHA*(qr + qn)) +
+  0.5 * (1*(pa1 + qa1) - ALPHA*(qa1)) - DELTA
 
 
-u_BRARKG <- 0.5 *(GAMMA * pr - ALPHA * qr) +
-  0.5 * (GAMMA * prar - ALPHA * pgar - qrar - ALPHA * qgar)
+u_1RA1A2KN <- 0.5 *(1*(pr+qr) - ALPHA*(qr)) +
+  0.5 * (1*(pa1 + qa1) - ALPHA*(qa1)) - DELTA
 
 
-u_BRKRAG <- 0.5 *(GAMMA * pg - ALPHA * qg) +
-  0.5 * (GAMMA * prar - ALPHA * pgar - qrar - ALPHA * qgar)
+u_1RA1K2AN <- 0.5 *(1*(pr+pn+qn) - ALPHA*(qn)) +
+  0.5 * (1*(pa1 + qa1) - ALPHA*(qa1)) - DELTA
 
 
-u_BRKRKG <- 0.5 * (GAMMA * prar - ALPHA * pgar - qrar - ALPHA * qgar)
-
-
-
-
-
-u_BGARAG <- 0.5 * (-ALPHA * pr - ALPHA * pg + qr + qg) +
-  0.5 * (GAMMA * prag - ALPHA * pgag - qrag - ALPHA * qgag) - DELTA
-
-
-u_BGARKG <-  0.5 * (-ALPHA * pr + qr) + 
-  0.5 * (GAMMA * prag - ALPHA * pgag - qrag - ALPHA * qgag) - DELTA
-
-
-u_BGKRAG <-  0.5 * (- ALPHA * pg + qg) +
-  0.5 * (GAMMA * prag - ALPHA * pgag - qrag - ALPHA * qgag) - DELTA
-
-
-u_BGKRKG <- 0.5 * (GAMMA * prag - ALPHA * pgag - qrag - ALPHA * qgag) - DELTA
+u_1RA1K2KN <- 0.5 *(1*(pr)) +
+  0.5 * (1*(pa1 + qa1) - ALPHA*(qa1)) - DELTA
 
 
 
 
 
-u_ERARAG <- 0.5 *(pr + pg - ALPHA * qr - ALPHA * qg) +
-  0.5 * (-ALPHA * prar - pgar - ALPHA * qrar + GAMMA * qgar) - DELTA 
+u_1RK1A2AN <- 0.5 *(1*(pn+qr+qn) - ALPHA*(qr + qn)) +
+  0.5 * (1*(pa1 + qa1) - ALPHA*(qa1)) - DELTA
 
 
-u_ERARKG <- 0.5 *(pr - ALPHA * qr) +
-  0.5 * (-ALPHA * prar - pgar - ALPHA * qrar + GAMMA * qgar) - DELTA 
+u_1RK1A2KN <- 0.5 *(1*(qr) - ALPHA*(qr)) +
+  0.5 * (1*(pa1 + qa1) - ALPHA*(qa1)) - DELTA
 
 
-u_ERKRAG <- 0.5 *(pg- ALPHA * qg) +
-  0.5 * (-ALPHA * prar - pgar - ALPHA * qrar + GAMMA * qgar) - DELTA 
+u_1RK1K2AN <- 0.5 *(1*(pn+qn) - ALPHA*(qn)) +
+  0.5 * (1*(pa1 + qa1) - ALPHA*(qa1)) - DELTA
 
 
-u_ERKRKG <- 0.5 * (-ALPHA * prar - pgar - ALPHA * qrar + GAMMA* qgar) - DELTA 
-
-
-
+u_1RK1K2KN <- 0.5 * (1*(pa1 + qa1) - ALPHA*(qa1)) - DELTA
 
 
 
-u_EGARAG <- 0.5 *(-ALPHA * pr - ALPHA * pg + GAMMA * qr + GAMMA * qg) +
-  0.5 * (-ALPHA * prag - pgag - ALPHA * qrag + GAMMA*qgag)
 
 
-u_EGARKG <- 0.5 *(-ALPHA * pr + GAMMA * qr) +
-  0.5 * (-ALPHA * prag - pgag - ALPHA * qrag + GAMMA*qgag)
+u_1NA1A2AN <- 0.5 *(1 - ALPHA*(qr + qn)) +
+  0.5 * (1*(pan + qan) - ALPHA*(qan))
 
-u_EGKRAG <- 0.5 *(- ALPHA * pg + GAMMA * qg) +
-  0.5 * (-ALPHA * prag - pgag - ALPHA * qrag + GAMMA*qgag)
+u_1NA1A2KN <- 0.5 *(1*(pr+qr) - ALPHA*(qr)) +
+  0.5 * (1*(pan + qan) - ALPHA*(qan))
+
+u_1NA1K2AN <- 0.5 *(1*(pr+pn+qn) - ALPHA*(qn)) +
+  0.5 * (1*(pan + qan) - ALPHA*(qan))
+
+u_1NA1K2KN <- 0.5 *(1*(pr)) +
+  0.5 * (1*(pan + qan) - ALPHA*(qan))
 
 
-u_EGKRKG <- 0.5 * (-ALPHA * prag - pgag - ALPHA * qrag + GAMMA*qgag)
 
 
-Expected_u <- c(u_BRARAG, u_BRARKG, u_BRKRAG, u_BRKRKG,
-                u_BGARAG, u_BGARKG, u_BGKRAG, u_BGKRKG,
-                u_ERARAG, u_ERARKG, u_ERKRAG, u_ERKRKG,
-                u_EGARAG, u_EGARKG, u_EGKRAG, u_EGKRKG)
+u_1NK1A2AN <- 0.5 *(1*(pn+qr+qn) - ALPHA*(qr + qn)) +
+  0.5 * (1*(pan + qan) - ALPHA*(qan))
+
+u_1NK1A2KN <- 0.5 *(1*(qr) - ALPHA*(qr)) +
+  0.5 * (1*(pan + qan) - ALPHA*(qan))
+
+u_1NK1K2AN <- 0.5 *(1*(pn+qn) - ALPHA*(qn)) +
+  0.5 * (1*(pan + qan) - ALPHA*(qan))
+
+u_1NK1K2KN <- 0.5 * (1*(pan + qan) - ALPHA*(qan))
+
+
+
+
+u_2RA1A2AN <- 0.5 *(1 - ALPHA*(pr + pn)) +
+  0.5 * (1*(pa2 + qa2) - ALPHA*(pa2)) - DELTA
+
+u_2RA1A2KN <- 0.5 *(1*(pr+qr) - ALPHA*(pr)) +
+  0.5 * (1*(pa2 + qa2) - ALPHA*(pa2)) - DELTA
+
+u_2RA1K2AN <- 0.5 *(1*(pr+pn+qn) - ALPHA*(pr + pn)) +
+  0.5 * (1*(pa2 + qa2) - ALPHA*(pa2)) - DELTA
+
+u_2RA1K2KN <- 0.5 *(1*(pr) - ALPHA*(pr)) +
+  0.5 * (1*(pa2 + qa2) - ALPHA*(pa2)) - DELTA
+
+
+
+
+u_2RK1A2AN <- 0.5 *(1*(pn+qr+qn) - ALPHA*(pn)) +
+  0.5 * (1*(pa2 + qa2) - ALPHA*(pa2)) - DELTA
+
+u_2RK1A2KN <- 0.5 *(1*(qr)) +
+  0.5 * (1*(pa2 + qa2) - ALPHA*(pa2)) - DELTA
+
+u_2RK1K2AN <- 0.5 *(1*(pn+qn) - ALPHA*(pn)) +
+  0.5 * (1*(pa2 + qa2) - ALPHA*(pa2)) - DELTA
+
+u_2RK1K2KN <- 0.5 * (1*(pa2 + qa2) - ALPHA*(pa2)) - DELTA
+
+
+
+
+u_2NA1A2AN <- 0.5 *(1 - ALPHA*(pr + pn)) +
+  0.5 * (1*(pan + qan) - ALPHA*(pan))
+
+u_2NA1A2KN <- 0.5 *(1*(pr+qr) - ALPHA*(pr)) +
+  0.5 * (1*(pan + qan) - ALPHA*(pan))
+
+u_2NA1K2AN <- 0.5 *(1*(pr+pn+qn) - ALPHA*(pr+pn)) +
+  0.5 * (1*(pan + qan) - ALPHA*(pan))
+
+u_2NA1K2KN <- 0.5 *(1*(pr) - ALPHA*(pr)) +
+  0.5 * (1*(pan + qan) - ALPHA*(pan))
+
+
+
+
+u_2NK1A2AN <- 0.5 *(1*(pn+qr+qn) - ALPHA*(pn)) +
+  0.5 * (1*(pan + qan) - ALPHA*(pan))
+
+u_2NK1A2KN <- 0.5 *(1*(qr)) +
+  0.5 * (1*(pan + qan) - ALPHA*(pan))
+
+u_2NK1K2AN <- 0.5 *(1*(pn+qn) - ALPHA*(pn)) +
+  0.5 * (1*(pan + qan) - ALPHA*(pan))
+
+u_2NK1K2KN <- 0.5 * (1*(pan + qan) - ALPHA*(pan))
+
+
+
+
+
+
+
+
+
+Expected_u <- c(u_1RA1A2AN, u_1RA1A2KN, u_1RA1K2AN, u_1RA1K2KN,
+                u_1RK1A2AN, u_1RK1A2KN, u_1RK1K2AN, u_1RK1K2KN,
+                u_1NA1A2AN, u_1NA1A2KN, u_1NA1K2AN, u_1NA1K2KN,
+                u_1NK1A2AN, u_1NK1A2KN, u_1NK1K2AN, u_1NK1K2KN,
+                u_2RA1A2AN, u_2RA1A2KN, u_2RA1K2AN, u_2RA1K2KN,
+                u_2RK1A2AN, u_2RK1A2KN, u_2RK1K2AN, u_2RK1K2KN,
+                u_2NA1A2AN, u_2NA1A2KN, u_2NA1K2AN, u_2NA1K2KN,
+                u_2NK1A2AN, u_2NK1A2KN, u_2NK1K2AN, u_2NK1K2KN)
+
+
 
 Max_u <- max(Expected_u)
 
@@ -401,7 +447,7 @@ Min_u <- min(Expected_u)
 
 Norm_Expected_u <- Expected_u
 
-for(i in 1:16){
+for(i in 1:32){
 
 Norm_Expected_u[i] <- (Expected_u[i] - Min_u)/(Max_u-Min_u)
 
@@ -414,7 +460,7 @@ Calc_N <- Players$N
 Population_Weighting <- 0
 
 
-for(i in 1:16){
+for(i in 1:32){
   
   Calc_N[i] <- Players$N[i] +  Norm_Expected_u[i]*Players$N[i]
   
@@ -433,15 +479,24 @@ assign(glue("Payoffs_Round_{Round_Number}"), Expected_u)
 }
 
 
-Payoff_Dynamics <- c("BRARAG", "BRARKG", "BRKRAG", "BRKRKG", 
-                     "BGARAG", "BGARKG", "BGKRAG", "BGKRKG",
-                     "ERARAG", "ERARKG", "ERKRAG", "ERKRKG",
-                     "EGARAG", "EGARKG", "EGKRAG", "EGKRKG") %>% as.data.frame
+Payoff_Dynamics <- c("1RA1A2AN", "1RA1A2KN", "1RA1K2AN", "1RA1K2KN",
+                     "1RK1A2AN", "1RK1A2KN", "1RK1K2AN", "1RK1K2KN",
+                     "1NA1A2AN", "1NA1A2KN", "1NA1K2AN", "1NA1K2KN",
+                     "1NK1A2AN", "1NK1A2KN", "1NK1K2AN", "1NK1K2KN",
+                     "2RA1A2AN", "2RA1A2KN", "2RA1K2AN", "2RA1K2KN",
+                     "2RK1A2AN", "2RK1A2KN", "2RK1K2AN", "2RK1K2KN",
+                     "2NA1A2AN", "2NA1A2KN", "2NA1K2AN", "2NA1K2KN",
+                     "2NK1A2AN", "2NK1A2KN", "2NK1K2AN", "2NK1K2KN")%>% as.data.frame
 
-N_Dynamics <- c("BRARAG", "BRARKG", "BRKRAG", "BRKRKG", 
-                "BGARAG", "BGARKG", "BGKRAG", "BGKRKG",
-                "ERARAG", "ERARKG", "ERKRAG", "ERKRKG",
-                "EGARAG", "EGARKG", "EGKRAG", "EGKRKG") %>% as.data.frame
+
+N_Dynamics <- c("1RA1A2AN", "1RA1A2KN", "1RA1K2AN", "1RA1K2KN",
+                "1RK1A2AN", "1RK1A2KN", "1RK1K2AN", "1RK1K2KN",
+                "1NA1A2AN", "1NA1A2KN", "1NA1K2AN", "1NA1K2KN",
+                "1NK1A2AN", "1NK1A2KN", "1NK1K2AN", "1NK1K2KN",
+                "2RA1A2AN", "2RA1A2KN", "2RA1K2AN", "2RA1K2KN",
+                "2RK1A2AN", "2RK1A2KN", "2RK1K2AN", "2RK1K2KN",
+                "2NA1A2AN", "2NA1A2KN", "2NA1K2AN", "2NA1K2KN",
+                "2NK1A2AN", "2NK1A2KN", "2NK1K2AN", "2NK1K2KN")%>% as.data.frame
 
 
 Time_Periods_N <- c(0:Max_Rounds)
